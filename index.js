@@ -1,48 +1,30 @@
-const express = require('express');
-const mongoose = require('mongoose');
-require('dotenv').config();
+const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+const path = require("path");
 const cors = require("cors");
-
-const userRoutes = require("./routes/authRoutes");
+require("dotenv").config();
+const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 
-const authRoutes = require('./routes/auth.route');
-const productRoutes = require('./routes/product.route');
-const { errorHandler } = require('./middlewares/error.middleware');
 
-const app = express();
-
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((err) => {
-    console.error('Error connecting to MongoDB:', err);
-  });
+const mongoUrl = process.env.MONGODB_URL;
+mongoose.connect(mongoUrl, err => {
+  if (err) throw err;
+  console.log("Mongodb connected...");
+});
 
-// API routes
-app.use('/api', authRoutes);
-app.use('/api', productRoutes);
-
-//Booksbuddies-task-manager
-app.use("/api/auth", userRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/profile", profileRoutes);
 
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  errorHandler(err, res);
-});
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+  console.log(`Backend is running on port ${port}`);
 });
