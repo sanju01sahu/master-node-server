@@ -1,6 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const cors = require("cors");
+
+const userRoutes = require("./routes/authRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 const authRoutes = require('./routes/auth.route');
 const productRoutes = require('./routes/product.route');
@@ -8,6 +13,7 @@ const { errorHandler } = require('./middlewares/error.middleware');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
@@ -23,6 +29,12 @@ mongoose
 // API routes
 app.use('/api', authRoutes);
 app.use('/api', productRoutes);
+
+//Booksbuddies-task-manager
+app.use("/api/auth", userRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/profile", profileRoutes);
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
