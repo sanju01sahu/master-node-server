@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
-const { ACCESS_TOKEN_SECRET } = process.env;
+const { JWT_SECRET } = process.env;
 
 const createAccessToken = (payload) => {
-  return jwt.sign(payload, ACCESS_TOKEN_SECRET);
+  return jwt.sign(payload, JWT_SECRET);
 }
 
 module.exports = {
